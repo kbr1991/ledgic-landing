@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('partials/head') %></head>
+<body>
+<%- include('partials/nav') %>
+
+<article class="post-page">
+  <div class="post-hero">
+    <div class="container post-hero-inner">
+      <a href="/blog" class="back-link">← Back to Blog</a>
+      <% if (post.tags) { %>
+      <div class="blog-tags" style="margin-bottom:1.2rem;">
+        <% post.tags.split(',').slice(0,4).forEach(tag => { %>
+        <a href="/blog?tag=<%= tag.trim() %>" class="blog-tag"><%= tag.trim() %></a>
+        <% }) %>
+      </div>
+      <% } %>
+      <h1><%= post.title %></h1>
+      <div class="post-meta">
+        <span><%= new Date(post.created_at).toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'}) %></span>
+        <span class="meta-dot">·</span>
+        <span><%= post.read_time %> min read</span>
+        <span class="meta-dot">·</span>
+        <span>KBR &amp; Co.</span>
+      </div>
+      <% if (post.excerpt) { %>
+      <p class="post-excerpt"><%= post.excerpt %></p>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="container post-body-wrap">
+    <div class="post-body prose">
+      <%- post.contentHtml %>
+    </div>
+    <aside class="post-sidebar">
+      <div class="sidebar-card">
+        <h4>About KBR &amp; Co.</h4>
+        <p>Established 1991. Chartered Accountants serving businesses across Tamil Nadu with expertise in GST, taxation, audit, and advisory.</p>
+        <a href="/#contact" class="btn btn-primary" style="width:100%;text-align:center;">Get in Touch</a>
+      </div>
+      <div class="sidebar-card">
+        <h4>Our Services</h4>
+        <ul class="sidebar-links">
+          <li><a href="/#services">GST Compliance</a></li>
+          <li><a href="/#services">Direct Taxation</a></li>
+          <li><a href="/#services">Audit &amp; Assurance</a></li>
+          <li><a href="/#services">Fundraising &amp; M&amp;A</a></li>
+          <li><a href="/#services">Virtual CFO</a></li>
+          <li><a href="/#services">Corporate Compliance</a></li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</article>
+
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+</body>
+</html>

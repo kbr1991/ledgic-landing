@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><%- include('partials/head') %></head>
+<body>
+<%- include('partials/nav') %>
+
+<div class="page-hero">
+  <div class="container">
+    <div class="section-label">Insights &amp; Updates</div>
+    <h1>Blog &amp; Analysis</h1>
+    <p>Expert analysis, regulatory updates, and practical insights on taxation, compliance, and business advisory from KBR &amp; Co.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <% if (tag) { %>
+    <div class="tag-filter-bar">
+      <span>Filtered by: <strong><%= tag %></strong></span>
+      <a href="/blog">Clear filter</a>
+    </div>
+    <% } %>
+
+    <% if (posts.length > 0) { %>
+    <div class="grid-3">
+      <% posts.forEach((post, i) => { %>
+      <a href="/blog/<%= post.slug %>" class="blog-card">
+        <div class="blog-meta">
+          <span><%= new Date(post.created_at).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'}) %></span>
+          <span><%= post.read_time %> min read</span>
+        </div>
+        <h3><%= post.title %></h3>
+        <p><%= post.excerpt %></p>
+        <% if (post.tags) { %>
+        <div class="blog-tags">
+          <% post.tags.split(',').slice(0,3).forEach(tag => { %>
+          <span class="blog-tag"><%= tag.trim() %></span>
+          <% }) %>
+        </div>
+        <% } %>
+        <div class="blog-read-more">Read Analysis →</div>
+      </a>
+      <% }) %>
+    </div>
+
+    <% if (totalPages > 1) { %>
+    <div class="pagination">
+      <% if (page > 1) { %><a href="/blog?page=<%= page-1 %><%= tag ? '&tag='+tag : '' %>" class="btn btn-outline">← Previous</a><% } %>
+      <span>Page <%= page %> of <%= totalPages %></span>
+      <% if (page < totalPages) { %><a href="/blog?page=<%= page+1 %><%= tag ? '&tag='+tag : '' %>" class="btn btn-outline">Next →</a><% } %>
+    </div>
+    <% } %>
+
+    <% } else { %>
+    <div class="empty-state">
+      <p>No posts found.</p>
+      <a href="/blog" class="btn btn-outline">View All Posts</a>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
+<script src="/js/main.js"></script>
+</body>
+</html>

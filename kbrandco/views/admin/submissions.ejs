@@ -1,0 +1,44 @@
+<%
+  locals.activePage = type === 'contact' ? 'contacts' : 'careers';
+%>
+<%- include('_layout_start', { title, adminUser }) %>
+
+<div class="page-header">
+  <h1><%= type === 'contact' ? 'Contact Enquiries' : 'Career Applications' %></h1>
+  <p><%= submissions.length %> submission<%= submissions.length !== 1 ? 's' : '' %> total.</p>
+</div>
+
+<div class="table-card">
+  <% if (submissions.length > 0) { %>
+  <table>
+    <thead>
+      <% if (type === 'contact') { %>
+      <tr><th>Name</th><th>Email</th><th>Phone</th><th>Message</th><th>Date</th></tr>
+      <% } else { %>
+      <tr><th>Name</th><th>Email</th><th>Position</th><th>Expertise</th><th>Resume</th><th>Date</th></tr>
+      <% } %>
+    </thead>
+    <tbody>
+      <% submissions.forEach(function(s) { %>
+      <tr>
+        <td><strong><%= type === 'contact' ? s.name : s.full_name %></strong></td>
+        <td><a href="mailto:<%= s.email %>" style="color:var(--gold)"><%= s.email %></a><% if (s.phone) { %><br><span class="text-muted"><%= s.phone %></span><% } %></td>
+        <% if (type === 'contact') { %>
+        <td class="text-muted"><%= s.phone || '—' %></td>
+        <td style="max-width:280px;font-size:0.8rem;color:var(--text2)"><%= s.message ? (s.message.length > 100 ? s.message.substring(0,100) + '…' : s.message) : '—' %></td>
+        <% } else { %>
+        <td><span class="badge badge-yellow"><%= s.position %></span></td>
+        <td class="text-muted"><%= s.expertise || '—' %></td>
+        <td><% if (s.resume_url) { %><a href="<%= s.resume_url %>" target="_blank" rel="noopener" style="color:var(--gold);font-size:0.8rem">View ↗</a><% } else { %><span class="text-muted">—</span><% } %></td>
+        <% } %>
+        <td class="text-muted" style="white-space:nowrap"><%= new Date(s.created_at).toLocaleDateString('en-IN') %></td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <% } else { %>
+  <div class="empty">No submissions yet.</div>
+  <% } %>
+</div>
+
+<%- include('_layout_end') %>

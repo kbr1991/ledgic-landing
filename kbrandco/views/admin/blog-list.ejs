@@ -1,0 +1,58 @@
+<%
+  locals.activePage = 'blog';
+%>
+<%- include('_layout_start', { title, adminUser }) %>
+
+<div class="page-header" style="display:flex;align-items:center;justify-content:space-between">
+  <div>
+    <h1>Blog Posts</h1>
+    <p>Manage all articles published on kbrandco.com.</p>
+  </div>
+  <a href="/admin/blog/new" class="btn btn-gold">+ New Post</a>
+</div>
+
+<div class="table-card">
+  <% if (posts.length > 0) { %>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Read Time</th>
+        <th>Status</th>
+        <th>Published</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% posts.forEach(function(p) { %>
+      <tr>
+        <td style="max-width:300px">
+          <strong style="font-size:0.875rem"><%= p.title.length > 65 ? p.title.substring(0,65) + '…' : p.title %></strong>
+          <div class="text-muted" style="margin-top:2px">/blog/<%= p.slug %></div>
+        </td>
+        <td><span class="badge badge-yellow"><%= p.category %></span></td>
+        <td class="text-muted"><%= p.read_time || '—' %></td>
+        <td><span class="badge <%= p.published ? 'badge-green' : 'badge-red' %>"><%= p.published ? 'Published' : 'Draft' %></span></td>
+        <td class="text-muted"><%= p.published_at ? new Date(p.published_at).toLocaleDateString('en-IN') : '—' %></td>
+        <td>
+          <div class="actions">
+            <% if (p.published) { %>
+            <a href="/blog/<%= p.slug %>" target="_blank" class="btn btn-outline btn-sm">View ↗</a>
+            <% } %>
+            <a href="/admin/blog/<%= p.id %>/edit" class="btn btn-gold btn-sm">Edit</a>
+            <form method="POST" action="/admin/blog/<%= p.id %>/delete" style="display:inline" onsubmit="return confirm('Permanently delete this post?')">
+              <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <% } else { %>
+  <div class="empty">No posts yet. <a href="/admin/blog/new" style="color:var(--gold)">Create your first post →</a></div>
+  <% } %>
+</div>
+
+<%- include('_layout_end') %>

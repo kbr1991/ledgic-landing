@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> — KBR Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="robots" content="noindex">
+</head>
+<body class="admin-body">
+<div class="admin-layout">
+  <%- include('../partials/admin-sidebar', { active: 'dashboard' }) %>
+  <main class="admin-main">
+    <div class="admin-page-header"><h1>Dashboard</h1></div>
+    <div class="admin-stats-grid">
+      <div class="admin-stat-card">
+        <div class="asc-num"><%= stats.posts %></div>
+        <div class="asc-label">Blog Posts</div>
+        <a href="/admin/posts" class="asc-link">Manage →</a>
+      </div>
+      <div class="admin-stat-card">
+        <div class="asc-num"><%= stats.contacts %></div>
+        <div class="asc-label">Contact Enquiries</div>
+        <a href="/admin/contacts" class="asc-link">View →</a>
+      </div>
+      <div class="admin-stat-card">
+        <div class="asc-num"><%= stats.careers %></div>
+        <div class="asc-label">Career Applications</div>
+        <a href="/admin/careers" class="asc-link">View →</a>
+      </div>
+    </div>
+    <div class="admin-section">
+      <h2>Recent Enquiries</h2>
+      <% if (recentContacts.length > 0) { %>
+      <table class="admin-table">
+        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Received</th></tr></thead>
+        <tbody>
+          <% recentContacts.forEach(c => { %>
+          <tr>
+            <td><%= c.name %></td>
+            <td><a href="mailto:<%= c.email %>"><%= c.email %></a></td>
+            <td><%= c.phone || '—' %></td>
+            <td><%= new Date(c.created_at).toLocaleDateString('en-IN') %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+      <% } else { %><p class="admin-empty">No enquiries yet.</p><% } %>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

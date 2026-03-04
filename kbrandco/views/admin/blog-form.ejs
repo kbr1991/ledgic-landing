@@ -1,0 +1,92 @@
+<%
+  locals.activePage = 'blog';
+%>
+<%- include('_layout_start', { title, adminUser }) %>
+
+<div class="page-header" style="display:flex;align-items:center;gap:16px">
+  <a href="/admin/blog" class="btn btn-outline btn-sm">← Back</a>
+  <div>
+    <h1><%= post ? 'Edit Post' : 'New Blog Post' %></h1>
+    <p><%= post ? `Editing: ${post.title.substring(0,50)}` : 'Create a new article for kbrandco.com' %></p>
+  </div>
+</div>
+
+<div class="form-card">
+  <form method="POST" action="<%= action %>">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="title">Title *</label>
+        <input type="text" id="title" name="title" value="<%= post ? post.title : '' %>" required placeholder="Article title">
+      </div>
+      <div class="form-group">
+        <label for="slug">URL Slug *</label>
+        <input type="text" id="slug" name="slug" value="<%= post ? post.slug : '' %>" required placeholder="url-friendly-slug">
+        <small style="color:var(--text3);font-size:0.75rem;margin-top:4px;display:block">Will be accessible at /blog/<em>slug</em></small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="excerpt">Excerpt / Summary</label>
+      <textarea id="excerpt" name="excerpt" rows="2" placeholder="Brief description shown in blog listing and SEO..."><%= post ? post.excerpt : '' %></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="content">Content (Markdown) *</label>
+      <textarea id="content" name="content" rows="24" required placeholder="Write in Markdown format..."><%= post ? post.content : '' %></textarea>
+      <small style="color:var(--text3);font-size:0.75rem;margin-top:4px;display:block">Use Markdown: # Heading, **bold**, *italic*, - list item, [link text](url)</small>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select id="category" name="category">
+          <option value="Tax" <%= post && post.category === 'Tax' ? 'selected' : '' %>>Tax</option>
+          <option value="GST" <%= post && post.category === 'GST' ? 'selected' : '' %>>GST</option>
+          <option value="Audit" <%= post && post.category === 'Audit' ? 'selected' : '' %>>Audit</option>
+          <option value="Corporate Law" <%= post && post.category === 'Corporate Law' ? 'selected' : '' %>>Corporate Law</option>
+          <option value="Investment Banking" <%= post && post.category === 'Investment Banking' ? 'selected' : '' %>>Investment Banking</option>
+          <option value="Compliance" <%= post && post.category === 'Compliance' ? 'selected' : '' %>>Compliance</option>
+          <option value="General" <%= !post || post.category === 'General' ? 'selected' : '' %>>General</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="read_time">Read Time</label>
+        <input type="text" id="read_time" name="read_time" value="<%= post ? post.read_time : '' %>" placeholder="e.g. 8 min read">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="checkbox-row">
+        <input type="checkbox" id="published" name="published" <%= post && post.published ? 'checked' : '' %>>
+        <label for="published" style="margin-bottom:0;cursor:pointer">Publish immediately (make visible on website)</label>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn btn-gold"><%= post ? 'Save Changes' : 'Create Post' %></button>
+      <a href="/admin/blog" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Auto-generate slug from title
+  const titleInput = document.getElementById('title');
+  const slugInput = document.getElementById('slug');
+  let slugManuallyEdited = <%= post ? 'true' : 'false' %>;
+
+  slugInput.addEventListener('input', () => { slugManuallyEdited = true; });
+
+  titleInput.addEventListener('input', () => {
+    if (!slugManuallyEdited) {
+      slugInput.value = titleInput.value
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .substring(0, 100);
+    }
+  });
+</script>
+
+<%- include('_layout_end') %>

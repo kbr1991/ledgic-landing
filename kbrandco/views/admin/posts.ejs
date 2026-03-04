@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> — KBR Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="robots" content="noindex">
+</head>
+<body class="admin-body">
+<div class="admin-layout">
+  <%- include('../partials/admin-sidebar', { active: 'posts' }) %>
+  <main class="admin-main">
+    <div class="admin-page-header">
+      <h1>Blog Posts</h1>
+      <a href="/admin/posts/new" class="btn btn-primary" style="font-size:0.9rem;padding:0.5rem 1.2rem;">+ New Post</a>
+    </div>
+    <% if (posts.length > 0) { %>
+    <table class="admin-table">
+      <thead><tr><th>Title</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+      <tbody>
+        <% posts.forEach(p => { %>
+        <tr>
+          <td><strong><%= p.title %></strong><br><small style="color:var(--muted);">/blog/<%= p.slug %></small></td>
+          <td>
+            <form method="POST" action="/admin/posts/<%= p.id %>/toggle" style="display:inline;">
+              <button type="submit" class="admin-toggle <%= p.published ? 'pub' : 'draft' %>">
+                <%= p.published ? 'Published' : 'Draft' %>
+              </button>
+            </form>
+          </td>
+          <td><%= new Date(p.created_at).toLocaleDateString('en-IN') %></td>
+          <td class="admin-actions">
+            <a href="/blog/<%= p.slug %>" target="_blank" class="aa-link">View</a>
+            <a href="/admin/posts/<%= p.id %>/edit" class="aa-link">Edit</a>
+            <form method="POST" action="/admin/posts/<%= p.id %>/delete" style="display:inline;" onsubmit="return confirm('Delete this post?')">
+              <button type="submit" class="aa-del">Delete</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% } else { %>
+    <div class="admin-empty">No posts yet. <a href="/admin/posts/new">Create your first post →</a></div>
+    <% } %>
+  </main>
+</div>
+</body>
+</html>

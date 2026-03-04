@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> — KBR Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="robots" content="noindex">
+</head>
+<body class="admin-body">
+<div class="admin-layout">
+  <%- include('../partials/admin-sidebar', { active: 'contacts' }) %>
+  <main class="admin-main">
+    <div class="admin-page-header"><h1>Contact Enquiries</h1></div>
+    <% if (contacts.length > 0) { %>
+    <table class="admin-table">
+      <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Message</th><th>Received</th><th></th></tr></thead>
+      <tbody>
+        <% contacts.forEach(c => { %>
+        <tr>
+          <td><strong><%= c.name %></strong></td>
+          <td><a href="mailto:<%= c.email %>"><%= c.email %></a></td>
+          <td><%= c.phone || '—' %></td>
+          <td style="max-width:300px;"><%= c.message.substring(0,120) %><%= c.message.length>120?'…':'' %></td>
+          <td><%= new Date(c.created_at).toLocaleDateString('en-IN') %></td>
+          <td>
+            <form method="POST" action="/admin/contacts/<%= c.id %>/delete" style="display:inline;" onsubmit="return confirm('Delete this submission?')">
+              <button type="submit" class="aa-del">Delete</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <% } else { %><div class="admin-empty">No enquiries received yet.</div><% } %>
+  </main>
+</div>
+</body>
+</html>
